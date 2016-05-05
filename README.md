@@ -4,6 +4,8 @@
 
 Currently, this library only supports iOS, but could easily support other platforms. Please submit an issue (or PR :D) for the platform you would like to support.
 
+Need authorization? Use [`motion-authorization`](https://github.com/andrewhavens/motion-authorization)!
+
 ## Installation
 
 Add this line to your application's `Gemfile`, then run `bundle install`:
