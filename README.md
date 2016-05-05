@@ -91,6 +91,18 @@ Auth.sign_out do
 end
 ```
 
+### `.current_user`
+
+`motion-authentication` provides a `current_user` attribute. It has no effect on authentication, so you can do whatever you want with it.
+
+```ruby
+Auth.sign_in(data) do |result|
+  if result.success?
+    Auth.current_user = User.new(result.object)
+  end
+end
+```
+
 ## Contributing
 
 1. Fork it
