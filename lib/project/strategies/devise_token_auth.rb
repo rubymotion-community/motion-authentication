@@ -11,6 +11,15 @@ module Motion
           end
         end
 
+        def sign_up(sign_up_url, params, &block)
+          AFMotion::JSON.post(sign_up_url, user: params) do |response|
+            if response.success?
+              store_auth_tokens(response.object)
+            end
+            block.call(response)
+          end
+        end
+
         def store_auth_tokens(data)
           MotionKeychain.set :auth_email, data["email"]
           MotionKeychain.set :auth_token, data["token"]

@@ -13,9 +13,19 @@ class Motion
         @sign_in_url
       end
 
+      def sign_up_url(val = nil)
+        @sign_up_url = val unless val.nil?
+        @sign_up_url
+      end
+
       def sign_in(params, &block)
         strategy.sign_in(sign_in_url, params, &block)
       end
+
+      def sign_up(params, &block)
+        strategy.sign_up(sign_up_url, params, &block)
+      end
+
 
       def authorization_header
         strategy.authorization_header
