@@ -3,7 +3,7 @@ module Motion
     class DeviseTokenAuth
       class << self
         def sign_in(sign_in_url, params, &block)
-          AFMotion::JSON.post(sign_in_url, user: params) do |response|
+          AFMotion::JSON.post(sign_in_url, params) do |response|
             if response.success?
               store_auth_tokens(response.object)
             end
@@ -12,7 +12,7 @@ module Motion
         end
 
         def sign_up(sign_up_url, params, &block)
-          AFMotion::JSON.post(sign_up_url, user: params) do |response|
+          AFMotion::JSON.post(sign_up_url, params) do |response|
             if response.success?
               store_auth_tokens(response.object)
             end
@@ -21,8 +21,9 @@ module Motion
         end
 
         def store_auth_tokens(data)
-          MotionKeychain.set :auth_email, data["email"]
+          MotionKeychain.set :auth_uid, data["uid"]
           MotionKeychain.set :auth_token, data["token"]
+          MotionKeychain.set :auth_client, data["client"]
         end
 
         def authorization_header
