@@ -1,18 +1,18 @@
 module Motion
   class Authentication
-    class DeviseTokenAuth
+    class DeviseTokenAuthGem
       class << self
         def sign_in(sign_in_url, params, &block)
-          AFMotion::JSON.post(sign_in_url, user: params) do |response|
+          AFMotion::JSON.post(sign_in_url, params) do |response|
             if response.success?
-              store_auth_tokens(response.object)
+              store_auth_tokens(response.operation.response.allHeaderFields)
             end
             block.call(response)
           end
         end
 
         def sign_up(sign_up_url, params, &block)
-          AFMotion::JSON.post(sign_up_url, user: params) do |response|
+          AFMotion::JSON.post(sign_up_url, params) do |response|
             if response.success?
               store_auth_tokens(response.object)
             end
@@ -21,14 +21,16 @@ module Motion
         end
 
         def store_auth_tokens(data)
-          MotionKeychain.set :auth_email, data["email"]
-          MotionKeychain.set :auth_token, data["token"]
+          MotionKeychain.set :auth_uid, data["uid"]
+          MotionKeychain.set :auth_token, data["access-token"]
+          MotionKeychain.set :auth_client, data["client"]
         end
 
         def authorization_header
           token = MotionKeychain.get :auth_token
-          email = MotionKeychain.get :auth_email
-          %Q|Token token="#{token}", email="#{email}"|
+          uid = MotionKeychain.get :auth_uid
+          client = MotionKeychain.get :auth_client
+          {"access-token" => token, "uid" => uid, "client" => client }
         end
 
         def signed_in?
@@ -36,8 +38,9 @@ module Motion
         end
 
         def sign_out(&block)
-          MotionKeychain.remove :auth_email
+          MotionKeychain.remove :auth_uid
           MotionKeychain.remove :auth_token
+          MotionKeychain.remove :auth_client
           block.call
         end
       end
