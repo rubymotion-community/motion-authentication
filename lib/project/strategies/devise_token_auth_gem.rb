@@ -14,7 +14,7 @@ module Motion
         def sign_up(sign_up_url, params, &block)
           AFMotion::JSON.post(sign_up_url, params) do |response|
             if response.success?
-              store_auth_tokens(response.object)
+              store_auth_tokens(response.operation.response.allHeaderFields)
             end
             block.call(response)
           end
