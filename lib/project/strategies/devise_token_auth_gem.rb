@@ -24,13 +24,11 @@ module Motion
           MotionKeychain.set :auth_uid, headers["uid"]
           MotionKeychain.set :auth_token, headers["access-token"]
           MotionKeychain.set :auth_client, headers["client"]
-          mp headers
-          mp body
-          MotionKeychain.set :current_user, "test"
+          MotionKeychain.set :current_user, body
         end
 
         def set_current_user
-          current_user = MotionKeychain.get :current_user
+          MotionKeychain.get :current_user
         end
 
         def authorization_header
