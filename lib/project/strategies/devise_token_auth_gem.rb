@@ -5,7 +5,7 @@ module Motion
         def sign_in(sign_in_url, params, &block)
           AFMotion::JSON.post(sign_in_url, params) do |response|
             if response.success?
-              store_auth_tokens(response.operation.response.allHeaderFields)
+              store_auth_tokens(response,response.operation.response.allHeaderFields)
             end
             block.call(response)
           end
@@ -20,10 +20,17 @@ module Motion
           end
         end
 
-        def store_auth_tokens(data)
-          MotionKeychain.set :auth_uid, data["uid"]
-          MotionKeychain.set :auth_token, data["access-token"]
-          MotionKeychain.set :auth_client, data["client"]
+        def store_auth_tokens(body,headers)
+          MotionKeychain.set :auth_uid, headers["uid"]
+          MotionKeychain.set :auth_token, headers["access-token"]
+          MotionKeychain.set :auth_client, headers["client"]
+          mp headers
+          mp body
+          MotionKeychain.set :current_user, "test"
+        end
+
+        def set_current_user
+          current_user = MotionKeychain.get :current_user
         end
 
         def authorization_header
@@ -41,6 +48,7 @@ module Motion
           MotionKeychain.remove :auth_uid
           MotionKeychain.remove :auth_token
           MotionKeychain.remove :auth_client
+          MotionKeychain.remove :current_user
           block.call
         end
       end
