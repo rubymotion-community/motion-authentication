@@ -5,7 +5,7 @@ module Motion
         def sign_in(sign_in_url, params, &block)
           AFMotion::JSON.post(sign_in_url, params) do |response|
             if response.success?
-              store_auth_tokens(response,response.operation.response.allHeaderFields)
+              store_auth_tokens(response.object,response.operation.response.allHeaderFields)
             end
             block.call(response)
           end
@@ -20,15 +20,19 @@ module Motion
           end
         end
 
-        def store_auth_tokens(body,headers)
+        def store_auth_tokens(response,headers)
           MotionKeychain.set :auth_uid, headers["uid"]
           MotionKeychain.set :auth_token, headers["access-token"]
           MotionKeychain.set :auth_client, headers["client"]
-          MotionKeychain.set :current_user, body
+          serialized_response = ""
+          response["data"].each do |key,value|
+            serialized_response << key + ":" + value.to_s + ","
+          end
+          MotionKeychain.set :current_user, serialized_response
         end
 
         def set_current_user
-          MotionKeychain.get :current_user
+          deserialize(MotionKeychain.get :current_user)
         end
 
         def authorization_header
@@ -49,6 +53,17 @@ module Motion
           MotionKeychain.remove :current_user
           block.call
         end
+
+        def deserialize(mystring,arr_sep=',', key_sep=':')
+          array = mystring.split(arr_sep)
+          hash = {}
+          array.each do |e|
+            key_value = e.split(key_sep)
+            hash[key_value[0]] = key_value[1]
+          end
+          return hash
+        end
+
       end
     end
   end
