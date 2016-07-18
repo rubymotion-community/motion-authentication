@@ -26,7 +26,7 @@ module Motion
           MotionKeychain.set :auth_client, headers["client"]
           serialized_response = ""
           response["data"].each do |key,value|
-            serialized_response << key + ":" + value.to_s + ","
+            serialized_response << key + "·" + value.to_s + ","
           end
           MotionKeychain.set :current_user, serialized_response
         end
@@ -54,7 +54,7 @@ module Motion
           block.call
         end
 
-        def deserialize(mystring,arr_sep=',', key_sep=':')
+        def deserialize(mystring,arr_sep=',', key_sep='·')
           array = mystring.split(arr_sep)
           hash = {}
           array.each do |e|
