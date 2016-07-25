@@ -2,6 +2,7 @@ module Motion
   class Authentication
     class DeviseTokenAuthGem
       class << self
+
         def sign_in(sign_in_url, params, &block)
           AFMotion::JSON.post(sign_in_url, params) do |response|
             if response.success?
@@ -14,7 +15,7 @@ module Motion
         def sign_up(sign_up_url, params, &block)
           AFMotion::JSON.post(sign_up_url, params) do |response|
             if response.success?
-              store_auth_tokens(response.operation.response.allHeaderFields)
+              store_auth_tokens(response.object,response.operation.response.allHeaderFields)
             end
             block.call(response)
           end
@@ -26,7 +27,15 @@ module Motion
           MotionKeychain.set :auth_client, headers["client"]
           serialized_response = ""
           response["data"].each do |key,value|
-            serialized_response << key + "·" + value.to_s + ","
+            if key == "assets"
+              value.each do |eachasset|
+                serialized_response << eachasset["name"] + "·" + eachasset["qty"].to_s + ","
+              end
+              #serialized_response << key[0]["name"] + "·" + key[0]["qty"] + ","
+              #serialized_response << "stars" + "·" + "50" + ","
+            else
+              serialized_response << key + "·" + value.to_s + ","
+            end
           end
           MotionKeychain.set :current_user, serialized_response
         end
