@@ -27,14 +27,15 @@ module Motion
           MotionKeychain.set :auth_client, headers["client"]
           serialized_response = ""
           response["data"].each do |key,value|
-            if key == "assets"
-              value.each do |eachasset|
-                serialized_response << eachasset["name"] + "·" + eachasset["qty"].to_s + ","
+            case key
+              when "assets"
+                value.each do |eachasset|
+                  serialized_response << eachasset["name"] + "·" + eachasset["qty"].to_s + ","
               end
-              #serialized_response << key[0]["name"] + "·" + key[0]["qty"] + ","
-              #serialized_response << "stars" + "·" + "50" + ","
-            else
-              serialized_response << key + "·" + value.to_s + ","
+              when "friends"
+                #do nothing
+              else
+                serialized_response << key + "·" + value.to_s + ","
             end
           end
           MotionKeychain.set :current_user, serialized_response
