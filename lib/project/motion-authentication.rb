@@ -26,6 +26,9 @@ class Motion
         strategy.sign_up(sign_up_url, params, &block)
       end
 
+      def set_current_user
+        strategy.set_current_user
+      end
 
       def authorization_header
         strategy.authorization_header

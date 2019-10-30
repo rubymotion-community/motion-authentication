@@ -27,7 +27,15 @@ end
 
 Available strategies:
 
-* `DeviseTokenAuth` - This authentication strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `email` and `token` keys in the JSON response object.
+* `DeviseTokenAuth` (default) - This authentication strategy is based on [José Valim's example gist](https://gist.github.com/josevalim/fb706b1e933ef01e4fb6) and is also in the format that Ember Simple Auth Devise adapter expects ([tutorial](http://romulomachado.github.io/2015/09/28/using-ember-simple-auth-with-devise.html))
+
+This strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `email` and `token` keys in the JSON response object.
+
+* `DeviseTokenAuthGem` - This authentication strategy is compatible with the current version of the devise_auth_token gem at https://github.com/lynndylanhurley/devise_token_auth
+
+Signing up: this strategy takes `email`, `password` and `password_confirmation`, makes a POST request to the `sign_up_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
+
+Signing in: this strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
 
 ### `.sign_in`
 
@@ -82,6 +90,32 @@ def on_load(options)
   end
 end
 ```
+
+Note on DeviseTokenAuthGem Strategy
+The devise_auth_token gem requires all authenticated API calls to include the keys `uid`, `access-token` and `client` in the HTTP headers.
+Calling `.authorization_header` will return a hash with the proper key/value pairs. To include these as headers in all calls we recommend setting up your API Client as follows:
+
+```ruby
+ApiClient.update_authorization_header(Auth.authorization_header)
+
+class ApiClient
+  class << self
+    def client
+      @client ||= AFMotion::SessionClient.build("http://localhost:3000/") do
+        response_serializer :json
+        header "Content-Type", "application/json"
+      end
+    end
+
+    def update_authorization_header(auth_headers_hash)
+      auth_headers_hash.each do |key, value|
+        client.headers[key] = value
+      end
+    end
+  end
+end
+```
+
 
 ### `.sign_out`
 
