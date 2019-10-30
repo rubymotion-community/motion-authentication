@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["email@andrewhavens.com"]
   spec.description   = %q{A simple, standardized authentication helper for common authentication strategies for RubyMotion apps.}
   spec.summary       = %q{A simple, standardized authentication helper for common authentication strategies for RubyMotion apps.}
-  spec.homepage      = "https://github.com/andrewhavens/motion-authentication"
+  spec.homepage      = "https://github.com/rubymotion-community/motion-authentication"
   spec.license       = "MIT"
 
   files = []
@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "motion-cocoapods"
   spec.add_dependency "motion-keychain"
+  # TODO: add dependency on motion-http
 
   spec.add_development_dependency "rake"
 end
