@@ -6,6 +6,8 @@ end
 
 require 'motion-cocoapods' # TODO: this won't work for Android
 require 'motion-keychain' # TODO: this won't work for Android
+require 'motion-http'
+require 'motion-html'
 
 lib_dir_path = File.dirname(File.expand_path(__FILE__))
 Motion::Project::App.setup do |app|

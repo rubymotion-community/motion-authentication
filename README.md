@@ -20,7 +20,7 @@ Start by subclassing `Motion::Authentication` to create your own `Auth` class. S
 
 ```ruby
 class Auth < Motion::Authentication
-  strategy DeviseTokenAuth
+  strategy DeviseCookieAuth
   sign_in_url "https://example.com/api/v1/users/sign_in"
 end
 ```
@@ -29,7 +29,7 @@ Available strategies:
 
 * `DeviseCookieAuth` - This strategy supports the default way of authenticating with Devise, just as if you were submitting the sign in form using a web browser. It works by making an initial request to fetch the authenticity token, then submits the `email` and `password`, then stores the resulting cookie for authenticating future requests. If your user model has a different name (i.e. `AdminUser`), pass along the `namespace` option (i.e. `namespace: 'admin_user'`) when calling `sign_in`. Otherwise, namespace defaults to `:user`.
 
-* `DeviseTokenAuth` - This authentication strategy is based on [José Valim's example gist](https://gist.github.com/josevalim/fb706b1e933ef01e4fb6) and is also in the format that Ember Simple Auth Devise adapter expects ([tutorial](http://romulomachado.github.io/2015/09/28/using-ember-simple-auth-with-devise.html))
+* `DeviseSimpleTokenAuth` - This authentication strategy is based on [José Valim's example gist](https://gist.github.com/josevalim/fb706b1e933ef01e4fb6) and is compatible with the [`simple_token_authentication` gem](https://github.com/gonzalo-bulnes/simple_token_authentication), and the [Ember Simple Auth Devise adapter](http://romulomachado.github.io/2015/09/28/using-ember-simple-auth-with-devise.html).
 
   This strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `email` and `token` keys in the JSON response object.
 

@@ -5,7 +5,7 @@ class Motion
 
       def strategy(val = nil)
         @strategy = val unless val.nil?
-        @strategy ||= DeviseTokenAuth
+        @strategy ||= DeviseCookieAuth
       end
 
       def sign_in_url(val = nil)

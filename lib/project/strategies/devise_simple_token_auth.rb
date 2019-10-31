@@ -1,9 +1,9 @@
 module Motion
   class Authentication
-    class DeviseTokenAuth
+    class DeviseSimpleTokenAuth
       class << self
         def sign_in(sign_in_url, params, &block)
-          AFMotion::JSON.post(sign_in_url, user: params) do |response|
+          HTTP.post(sign_in_url, json: { user: params }) do |response|
             if response.success?
               store_auth_tokens(response.object)
             end
@@ -12,7 +12,7 @@ module Motion
         end
 
         def sign_up(sign_up_url, params, &block)
-          AFMotion::JSON.post(sign_up_url, user: params) do |response|
+          HTTP.post(sign_up_url, json: { user: params }) do |response|
             if response.success?
               store_auth_tokens(response.object)
             end
