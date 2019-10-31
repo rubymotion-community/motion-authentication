@@ -10,7 +10,7 @@ Need authorization? Use [`motion-authorization`](https://github.com/rubymotion-c
 
 Add this line to your application's `Gemfile`, then run `bundle install`:
 
-    gem 'motion-authentication'
+    gem 'motion-authentication', '~> 2.0'
 
 Next, run `rake pod:install` to install the CocoaPod dependencies.
 
