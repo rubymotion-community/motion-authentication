@@ -11,6 +11,7 @@ Need authorization? Use [`motion-authorization`](https://github.com/rubymotion-c
 Add this line to your application's `Gemfile`, then run `bundle install`:
 
     gem 'motion-authentication'
+    gem 'motion-html' # if using DeviseCookieAuth
 
 Next, run `rake pod:install` to install the CocoaPod dependencies.
 
@@ -21,21 +22,25 @@ Start by subclassing `Motion::Authentication` to create your own `Auth` class. S
 ```ruby
 class Auth < Motion::Authentication
   strategy DeviseTokenAuth
-  sign_in_url "http://localhost:3000/api/v1/users/sign_in"
+  sign_in_url "https://example.com/api/v1/users/sign_in"
 end
 ```
 
 Available strategies:
 
-* `DeviseTokenAuth` (default) - This authentication strategy is based on [José Valim's example gist](https://gist.github.com/josevalim/fb706b1e933ef01e4fb6) and is also in the format that Ember Simple Auth Devise adapter expects ([tutorial](http://romulomachado.github.io/2015/09/28/using-ember-simple-auth-with-devise.html))
+* `DeviseCookieAuth` - This strategy supports the default way of authenticating with Devise, just as if you were submitting the sign in form using a web browser. It works by making an initial request to fetch the authenticity token, then submits the `email` and `password`, then stores the resulting cookie for authenticating future requests. If your user model has a different name (i.e. `AdminUser`), pass along the `namespace` option (i.e. `namespace: 'admin_user'`) when calling `sign_in`. Otherwise, namespace defaults to `:user`.
 
-This strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `email` and `token` keys in the JSON response object.
+  You will also need to add the `motion-html` gem to your Gemfile.
+
+* `DeviseTokenAuth` - This authentication strategy is based on [José Valim's example gist](https://gist.github.com/josevalim/fb706b1e933ef01e4fb6) and is also in the format that Ember Simple Auth Devise adapter expects ([tutorial](http://romulomachado.github.io/2015/09/28/using-ember-simple-auth-with-devise.html))
+
+  This strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `email` and `token` keys in the JSON response object.
 
 * `DeviseTokenAuthGem` - This authentication strategy is compatible with the current version of the devise_auth_token gem at https://github.com/lynndylanhurley/devise_token_auth
 
-Signing up: this strategy takes `email`, `password` and `password_confirmation`, makes a POST request to the `sign_up_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
+  Signing up: this strategy takes `email`, `password` and `password_confirmation`, makes a POST request to the `sign_up_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
 
-Signing in: this strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
+  Signing in: this strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
 
 ### `.sign_in`
 
@@ -46,12 +51,10 @@ Auth.sign_in(email: email, password: password) do |result|
   if result.success?
     # authentication successful!
   else
-    app.alert "Invalid login?"
+    app.alert "Invalid email or password"
   end
 end
 ```
-
-A successful sign in will securely store the current user's auth token.
 
 ### `.signed_in?`
 
@@ -69,7 +72,7 @@ end
 
 ### `.authorization_header`
 
-After signing in, and receiving the auth token, you will probably want to configure your API client to use your auth token in your API requests in an authorization header. Call `.authorization_header` to return the header value specific to the strategy that you are using. Two common places would be upon sign in, and when your app is launched.
+After signing in, assuming you are using one of the token auth strategies, you will want to configure your API client to use your auth token in your API requests in an authorization header. Call `.authorization_header` to return the header value specific to the strategy that you are using. Two common places would be upon sign in, and when your app is launched.
 
 ```ruby
 # app_delegate.rb
@@ -91,9 +94,9 @@ def on_load(options)
 end
 ```
 
-Note on DeviseTokenAuthGem Strategy
-The devise_auth_token gem requires all authenticated API calls to include the keys `uid`, `access-token` and `client` in the HTTP headers.
-Calling `.authorization_header` will return a hash with the proper key/value pairs. To include these as headers in all calls we recommend setting up your API Client as follows:
+#### Note on `DeviseTokenAuthGem` strategy
+
+The `devise_token_auth` gem requires all authenticated API calls to include the keys `uid`, `access-token` and `client` in the HTTP headers. Calling `.authorization_header` will return a hash with the proper key/value pairs. To include these as headers in all calls we recommend setting up your API client as follows:
 
 ```ruby
 ApiClient.update_authorization_header(Auth.authorization_header)
@@ -115,7 +118,6 @@ class ApiClient
   end
 end
 ```
-
 
 ### `.sign_out`
 

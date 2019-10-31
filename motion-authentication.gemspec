@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "motion-cocoapods"
   spec.add_dependency "motion-keychain"
-  # TODO: add dependency on motion-http
+  spec.add_dependency "motion-http"
 
   spec.add_development_dependency "rake"
 end
