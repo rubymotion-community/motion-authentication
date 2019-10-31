@@ -91,7 +91,7 @@ def on_load(options)
 end
 ```
 
-#### Note on `DeviseTokenAuthGem` strategy
+#### Note on `DeviseTokenAuth` strategy
 
 The `devise_token_auth` gem requires all authenticated API calls to include the keys `uid`, `access-token` and `client` in the HTTP headers. Calling `.authorization_header` will return a hash with the proper key/value pairs. To include these as headers in all calls we recommend setting up your API client as follows:
 
