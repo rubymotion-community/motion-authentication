@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |spec|
   spec.name          = "motion-authentication"
-  spec.version       = "1.0.0"
+  spec.version       = "2.0.0"
   spec.authors       = ["Andrew Havens"]
   spec.email         = ["email@andrewhavens.com"]
   spec.description   = %q{A simple, standardized authentication helper for common authentication strategies for RubyMotion apps.}
@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "motion-cocoapods"
   spec.add_dependency "motion-keychain"
   spec.add_dependency "motion-http"
+  spec.add_dependency "motion-html"
 
   spec.add_development_dependency "rake"
 end

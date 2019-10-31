@@ -11,7 +11,6 @@ Need authorization? Use [`motion-authorization`](https://github.com/rubymotion-c
 Add this line to your application's `Gemfile`, then run `bundle install`:
 
     gem 'motion-authentication'
-    gem 'motion-html' # if using DeviseCookieAuth
 
 Next, run `rake pod:install` to install the CocoaPod dependencies.
 
@@ -29,8 +28,6 @@ end
 Available strategies:
 
 * `DeviseCookieAuth` - This strategy supports the default way of authenticating with Devise, just as if you were submitting the sign in form using a web browser. It works by making an initial request to fetch the authenticity token, then submits the `email` and `password`, then stores the resulting cookie for authenticating future requests. If your user model has a different name (i.e. `AdminUser`), pass along the `namespace` option (i.e. `namespace: 'admin_user'`) when calling `sign_in`. Otherwise, namespace defaults to `:user`.
-
-  You will also need to add the `motion-html` gem to your Gemfile.
 
 * `DeviseTokenAuth` - This authentication strategy is based on [José Valim's example gist](https://gist.github.com/josevalim/fb706b1e933ef01e4fb6) and is also in the format that Ember Simple Auth Devise adapter expects ([tutorial](http://romulomachado.github.io/2015/09/28/using-ember-simple-auth-with-devise.html))
 
