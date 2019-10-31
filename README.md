@@ -33,11 +33,11 @@ Available strategies:
 
   This strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `email` and `token` keys in the JSON response object.
 
-* `DeviseTokenAuthGem` - This authentication strategy is compatible with the current version of the devise_auth_token gem at https://github.com/lynndylanhurley/devise_token_auth
+* `DeviseTokenAuth` - This authentication strategy is compatible with the [`devise_token_auth` gem](https://github.com/lynndylanhurley/devise_token_auth).
 
-  Signing up: this strategy takes `email`, `password` and `password_confirmation`, makes a POST request to the `sign_up_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
+  **Signing up:** this strategy takes `email`, `password` and `password_confirmation`, makes a POST request to the `sign_up_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
 
-  Signing in: this strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
+  **Signing in:** this strategy takes `email` and `password`, makes a POST request to the `sign_in_url`, and expects the response to include `uid`, `access-token` and `client` keys in the response object headers.
 
 ### `.sign_in`
 
